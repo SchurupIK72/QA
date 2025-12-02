@@ -1,13 +1,17 @@
 """
 Генератор тестовых данных для QA проектов
-Версия: 1.0.0
+Версия: 1.1.0
 """
 
 import random
 import string
+import os
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 import json
+
+# Путь к папке для сохранения тестовых данных
+TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "TestData")
 
 
 class TestDataGenerator:
@@ -364,26 +368,37 @@ class TestDataGenerator:
     
     # ==================== ЭКСПОРТ ====================
     
-    def export_to_json(self, data: Any, filename: str):
+    def export_to_json(self, data: Any, filename: str, output_dir: str = None):
         """
         Экспорт данных в JSON файл
         
         Args:
             data: Данные для экспорта
             filename: Имя файла
+            output_dir: Папка для сохранения (по умолчанию TestData)
         """
-        with open(filename, 'w', encoding='utf-8') as f:
+        if output_dir is None:
+            output_dir = TEST_DATA_DIR
+        
+        # Создаем папку если не существует
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Полный путь к файлу
+        filepath = os.path.join(output_dir, filename)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         
-        print(f"✅ Данные экспортированы в {filename}")
+        print(f"✅ Данные экспортированы в {filepath}")
     
-    def export_to_csv(self, data: List[Dict], filename: str):
+    def export_to_csv(self, data: List[Dict], filename: str, output_dir: str = None):
         """
         Экспорт данных в CSV файл
         
         Args:
             data: Список словарей для экспорта
             filename: Имя файла
+            output_dir: Папка для сохранения (по умолчанию TestData)
         """
         import csv
         
@@ -391,14 +406,23 @@ class TestDataGenerator:
             print("❌ Нет данных для экспорта")
             return
         
+        if output_dir is None:
+            output_dir = TEST_DATA_DIR
+        
+        # Создаем папку если не существует
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Полный путь к файлу
+        filepath = os.path.join(output_dir, filename)
+        
         keys = data[0].keys()
         
-        with open(filename, 'w', newline='', encoding='utf-8-sig') as f:
+        with open(filepath, 'w', newline='', encoding='utf-8-sig') as f:
             writer = csv.DictWriter(f, fieldnames=keys)
             writer.writeheader()
             writer.writerows(data)
         
-        print(f"✅ Данные экспортированы в {filename}")
+        print(f"✅ Данные экспортированы в {filepath}")
 
 
 # ==================== ИНТЕРАКТИВНАЯ КОНСОЛЬ ====================
@@ -823,6 +847,7 @@ class InteractiveConsole:
             
             self.print_menu("ГЕНЕРАТОР ТЕСТОВЫХ ДАННЫХ - ГЛАВНОЕ МЕНЮ", options)
             print(f"\nТекущая локаль: {self.locale.upper()}")
+            print(f"📁 Папка экспорта: {TEST_DATA_DIR}")
             
             choice = self.get_input("\nВыберите действие", "0")
             

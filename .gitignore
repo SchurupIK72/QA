@@ -1,6 +1,11 @@
 # Конфиденциальная информация
 confidential/
 
+# Сгенерированные тестовые данные
+TestData/*.json
+TestData/*.csv
+!TestData/README.md
+
 # Файлы со swagger документацией (могут содержать чувствительные данные)
 swagger*.json
 *.swagger.json
