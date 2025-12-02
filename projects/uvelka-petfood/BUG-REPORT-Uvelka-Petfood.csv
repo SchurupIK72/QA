@@ -2,25 +2,27 @@
 1,UP-SEO,SEO,Frontend,BUG-SEO-1,02.12.2025,Web,"SEO.Frontend.Заголовок главной страницы слишком короткий (16 символов вместо 40-70)",,Open,Major,High,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
 2. Открыть DevTools (F12) → Elements
 3. Найти тег <title> в <head>
-4. Обратить внимание на содержимое тега <title>","Заголовок страницы: ""Главная страница"" (16 символов)","Заголовок страницы должен содержать от 40 до 70 символов согласно ТЗ раздел 2.14.1 SEO-требования",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест test_page_has_title,Автотест,"Обнаружено автотестом Playwright. Критично для SEO-оптимизации сайта",1
-2,UP-PERF,Performance,Frontend,BUG-PERF-1,02.12.2025,Web,"Performance.Frontend.Битое изображение arrow-up.svg возвращает 404",,Open,Minor,Medium,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
+4. Обратить внимание на содержимое тега <title>","Заголовок страницы: ""Главная страница"" (16 символов)","Заголовок страницы должен содержать от 40 до 70 символов согласно ТЗ раздел 2.14.1 SEO-требования",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestSEO::test_page_title_length,Автотест,"ЧЛ #118. Обнаружено автотестом Playwright. Критично для SEO-оптимизации сайта",2
+2,UP-PERF,Performance,Frontend,BUG-PERF-1,02.12.2025,Web,"Performance.Frontend.Битые изображения на главной странице",,Open,Minor,Medium,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
 2. Открыть DevTools (F12) → Network
 3. Обновить страницу
-4. Отфильтровать по статусу 404
-5. Обратить внимание на запрос к /local/templates/appfox/images/svg/arrow-up.svg",Изображение arrow-up.svg не загружается (статус 404),Все изображения сайта должны загружаться корректно (статус 200),Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест test_no_broken_images,Автотест,"URL битого изображения: http://uvelka-petfood.tw1.ru/local/templates/appfox/images/svg/arrow-up.svg",1
-3,UP-PERF,Performance,Frontend,BUG-PERF-2,02.12.2025,Web,"Performance.Frontend.Главная страница указана как src изображения",,Open,Minor,Medium,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
+4. Отфильтровать по статусу 404 или проверить загрузку изображений
+5. Обратить внимание на незагруженные изображения","Обнаружены битые изображения, которые не загружаются корректно",Все изображения сайта должны загружаться корректно (статус 200),Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestPerformance::test_no_broken_images,Автотест,"Тест проверяет img.complete && img.naturalHeight > 0",2
+3,UP-UI,Structure,Frontend,BUG-STRUCT-1,02.12.2025,Web,"Structure.Frontend.Отсутствует семантический тег main или контейнер .content",,Open,Minor,Low,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
 2. Открыть DevTools (F12) → Elements
-3. Найти тег <img> с src=""http://uvelka-petfood.tw1.ru/""
-4. Обратить внимание на некорректный src","Один из тегов <img> имеет src=""http://uvelka-petfood.tw1.ru/"" (URL страницы вместо изображения)",Атрибут src тега <img> должен содержать путь к изображению (.jpg/.png/.svg/.webp),Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест test_no_broken_images,Автотест,"Ошибка в HTML-разметке: URL страницы вместо изображения",1
-4,UP-NAV,Navigation,Frontend,BUG-NAV-1,02.12.2025,Web,"Navigation.Frontend.Страница брендов не достигает состояния networkidle за 30 секунд",,Open,Major,High,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
-2. Нажать на пункт меню ""Бренды"" в навигации
-3. Дождаться полной загрузки страницы
-4. Обратить внимание на время загрузки",Страница брендов не достигает состояния networkidle в течение 30 секунд (Timeout),Страница должна полностью загружаться менее чем за 3-5 секунд,Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест test_navigate_to_brands,Автотест,"Возможные причины: зацикленные запросы, незавершающийся polling, тяжелые ресурсы. Требуется анализ Network waterfall",1
-5,UP-UI,Brands,Frontend,BUG-BRANDS-1,02.12.2025,Web,"Brands.Frontend.Карточка бренда не содержит изображения",,Open,Minor,Medium,,,Да,,"1. Открыть страницу брендов http://uvelka-petfood.tw1.ru/brands/
-2. Найти первую карточку бренда
-3. Проверить наличие изображения внутри карточки
-4. Обратить внимание на отсутствие тега <img>",Карточка бренда не содержит изображения (тег <img> отсутствует или невидим),Каждая карточка бренда должна содержать изображение продукта согласно макету,Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/brands/,Автотест test_brand_card_has_required_elements,Автотест,"Селектор поиска: [class*='brand'] .card article с вложенным img",1
-6,UP-FORM,Feedback Form,Frontend,BUG-FORM-1,02.12.2025,Web,"Form.Frontend.Форма обратной связи скрыта по умолчанию и не открывается",,Open,Major,High,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
-2. Найти кнопку открытия формы обратной связи
-3. Нажать на кнопку
-4. Обратить внимание на форму с id=""feedback-form""","Форма #feedback-form существует в DOM, но имеет display: none и не становится видимой",Форма обратной связи должна открываться при нажатии на кнопку и быть видимой для пользователя,Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест test_form_opens,Автотест,"Форма найдена 9 раз в DOM но каждый раз со статусом hidden. Возможно JS не отрабатывает",1
+3. Искать тег <main> или элемент с классом .content
+4. Обратить внимание на отсутствие данных элементов","Тег <main> или элемент с классом .content не найден на странице","Страница должна содержать семантический тег <main> или контейнер .content для контентной области согласно ТЗ 2.1",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestSiteStructure::test_site_has_content_area,Автотест,"ЧЛ #10. Влияет на SEO и доступность (accessibility)",1
+4,UP-UI,Header,Frontend,BUG-HEADER-1,02.12.2025,Web,"Header.Frontend.Кнопка поиска не найдена по стандартным селекторам",,Open,Minor,Medium,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
+2. Найти в header элемент с классом *search* или кнопку с иконкой поиска
+3. Обратить внимание на отсутствие элемента по стандартным селекторам","Элемент поиска не найден по селекторам: header [class*='search'], header button[class*='search'], header svg","Кнопка поиска должна быть доступна в header с узнаваемым классом или атрибутом согласно ТЗ 2.2.1",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestMainPage::test_search_button,Автотест,"ЧЛ #24. Возможно кнопка имеет нестандартную разметку",1
+5,UP-NAV,About,Frontend,BUG-ABOUT-1,02.12.2025,Web,"About.Frontend.Ссылка на раздел О компании не найдена в header",,Open,Major,High,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
+2. Найти в header ссылку с href содержащим 'about'
+3. Обратить внимание на отсутствие такой ссылки","Ссылка header a[href*='about'] не найдена в навигации","В header должна быть ссылка на раздел О компании с href содержащим 'about' согласно ТЗ 2.7",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestAboutSection::test_about_page_opens_from_header,Автотест,"ЧЛ #69. Возможно href использует другой формат URL",1
+6,UP-NAV,About,Frontend,BUG-ABOUT-2,02.12.2025,Web,"About.Frontend.Выпадающее меню не появляется при наведении на О компании",,Open,Minor,Medium,,,Да,,"1. Открыть главную страницу сайта http://uvelka-petfood.tw1.ru/
+2. Навести курсор на пункт меню 'О компании'
+3. Подождать 300мс
+4. Проверить появление выпадающего списка подразделов","Выпадающее меню с подразделами не появляется при наведении","При наведении на 'О компании' должен открываться выпадающий список ссылок на подразделы согласно ТЗ 2.7",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/,Автотест TestAboutSection::test_about_dropdown_menu,Автотест,"ЧЛ #70. Селекторы поиска: [class*='dropdown'], [class*='submenu'], ul[class*='sub']",1
+7,UP-FORM,Contacts,Frontend,BUG-FORM-2,02.12.2025,Web,"Form.Frontend.Поле Email не видимо на странице контактов",,Open,Major,High,,,Да,,"1. Открыть страницу контактов http://uvelka-petfood.tw1.ru/contacts/
+2. Найти форму обратной связи
+3. Найти поле ввода email (input[type='email'])
+4. Проверить видимость поля","Поле email существует в DOM, но не видимо для пользователя (форма скрыта)","Форма обратной связи с полем email должна быть видима на странице контактов согласно ТЗ 2.11",Playwright 1.56.0 + pytest-playwright 0.7.2 (Chromium),http://uvelka-petfood.tw1.ru/contacts/,Автотест TestFeedbackForm::test_form_has_email_field,Автотест,"ЧЛ #94-95. Форма скрыта, требуется открытие через кнопку 'Связаться'",1

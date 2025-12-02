@@ -1,16 +1,17 @@
 """
 Конфигурация pytest для тестов Playwright
 Проект: UvelkaPetfood
+Версия: 2.0.0
 """
 
 import pytest
 
 
 def pytest_configure(config):
-    """Настройка pytest"""
-    config.addinivalue_line(
-        "markers", "slow: marks tests as slow (deselect with '-m not slow')"
-    )
+    """Настройка маркеров pytest"""
+    config.addinivalue_line("markers", "slow: marks tests as slow (deselect with -m 'not slow')")
+    config.addinivalue_line("markers", "smoke: marks tests as smoke tests")
+    config.addinivalue_line("markers", "regression: marks tests as regression tests")
 
 
 @pytest.fixture(scope="session")
@@ -18,7 +19,7 @@ def browser_type_launch_args(browser_type_launch_args):
     """Аргументы запуска браузера"""
     return {
         **browser_type_launch_args,
-        "slow_mo": 100,  # Замедление для отладки
+        "headless": True,
     }
 
 
