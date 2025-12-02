@@ -1,0 +1,43 @@
+# Конфиденциальная информация
+confidential/
+
+# Файлы со swagger документацией (могут содержать чувствительные данные)
+swagger*.json
+*.swagger.json
+
+# Файлы с паролями и ключами
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.local
+.env.*.local
+
+# Персональные заметки
+**/personal-notes/
+*.private.md
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+~$*
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS файлы
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Бэкапы
+*.bak
+*.backup
+*~

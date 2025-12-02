@@ -1,0 +1,4 @@
+№,ID Эпика,Section,Short prefix,ID,Opening Date,Platform,Title,YouTrack,Status,Severity,Priority,Developer,Исправлен в билде,Воспроизводится,Pre-condition,Steps,Actual Result,Expected Result,Environment,Build,Proofs,QA,Additional info,Bug frequency counter
+1,,,Backend,BUG--1,,,,,Open,Critical,High,,,,,"1. Шаг 1
+2. Шаг 2
+3. Шаг 3",Описание фактического результата,Описание ожидаемого результата,Указать окружение (браузер/ОС/устройство),Номер билда,Ссылка на пруфы,Имя QA,,1

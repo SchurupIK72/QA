@@ -1,0 +1,12 @@
+Чек-лист для регрессионного тестирования,,,,,,,,,,,,,,,Дата проверки:
+№ п\п,Раздел,Название проверки,Google Chrome,Яндекс Браузер,Safari,Microsoft Edge,Opera,FireFox,Mobile,Дата проверки,Ссылка на баг-репорт,Комментарий,,,
+1,Раздел 1,Проверка 1,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,,,,,,
+2,Раздел 1,Проверка 2,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,,,,,,
+3,Раздел 2,Проверка 3,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,,,,,,
+4,Раздел 2,Проверка 4,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,NOT STARTED,,,,,,
+,,,,,,,,,,,,,,,,
+Легенда:,,,,,,,,,,,,,,,,
+PASSED,- Проверка пройдена успешно,,,,,,,,,,,,,,,
+FAILED,- Проверка не пройдена (найден баг),,,,,,,,,,,,,,,
+SKIPED,- Проверка пропущена (нельзя проверить/серая зона),,,,,,,,,,,,,,,
+NOT STARTED,- Проверка не начата,,,,,,,,,,,,,,,
