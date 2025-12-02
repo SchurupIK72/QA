@@ -1,6 +1,11 @@
 """
 Генератор тестовых данных для QA проектов
-Версия: 1.1.0
+Версия: 1.2.0
+
+Новое в 1.2.0:
+- Режим эквивалентного разбиения (Boundary Value Analysis)
+- Генерация граничных значений для строковых и числовых данных
+- Поддержка кириллицы в генерации строк
 """
 
 import random
@@ -321,6 +326,207 @@ class TestDataGenerator:
         types = ["Sword", "Shield", "Armor", "Helmet", "Boots", "Ring", "Amulet", "Potion"]
         
         return f"{random.choice(qualities)} {random.choice(types)}"
+    
+    # ==================== ЭКВИВАЛЕНТНОЕ РАЗБИЕНИЕ (BVA) ====================
+    
+    def get_boundary_lengths(self, min_len: int, max_len: int) -> List[Dict[str, Any]]:
+        """
+        Получение граничных значений длины для тестирования
+        
+        Args:
+            min_len: Минимальная допустимая длина
+            max_len: Максимальная допустимая длина
+        
+        Returns:
+            Список словарей с длиной, типом границы и ожидаемым результатом
+        """
+        boundaries = []
+        
+        # Ниже минимума (невалидное)
+        if min_len > 0:
+            boundaries.append({
+                "length": min_len - 1,
+                "boundary_type": "below_min",
+                "description": f"Ниже минимума ({min_len - 1} < {min_len})",
+                "expected_valid": False
+            })
+        
+        # Минимум (валидное)
+        boundaries.append({
+            "length": min_len,
+            "boundary_type": "min",
+            "description": f"Минимум ({min_len})",
+            "expected_valid": True
+        })
+        
+        # Выше минимума (валидное)
+        if min_len + 1 <= max_len:
+            boundaries.append({
+                "length": min_len + 1,
+                "boundary_type": "above_min",
+                "description": f"Выше минимума ({min_len + 1})",
+                "expected_valid": True
+            })
+        
+        # Ниже максимума (валидное)
+        if max_len - 1 >= min_len and max_len - 1 != min_len + 1:
+            boundaries.append({
+                "length": max_len - 1,
+                "boundary_type": "below_max",
+                "description": f"Ниже максимума ({max_len - 1})",
+                "expected_valid": True
+            })
+        
+        # Максимум (валидное)
+        boundaries.append({
+            "length": max_len,
+            "boundary_type": "max",
+            "description": f"Максимум ({max_len})",
+            "expected_valid": True
+        })
+        
+        # Выше максимума (невалидное)
+        boundaries.append({
+            "length": max_len + 1,
+            "boundary_type": "above_max",
+            "description": f"Выше максимума ({max_len + 1} > {max_len})",
+            "expected_valid": False
+        })
+        
+        return boundaries
+    
+    def generate_string_exact_length(self, 
+                                     length: int,
+                                     use_letters: bool = True,
+                                     use_digits: bool = False,
+                                     use_special: bool = False,
+                                     use_cyrillic: bool = False,
+                                     use_uppercase: bool = False) -> str:
+        """
+        Генерация строки точной длины с заданными параметрами
+        
+        Args:
+            length: Точная длина строки
+            use_letters: Использовать латинские буквы
+            use_digits: Использовать цифры
+            use_special: Использовать специальные символы
+            use_cyrillic: Использовать кириллицу
+            use_uppercase: Использовать заглавные буквы
+        
+        Returns:
+            Строка заданной длины
+        """
+        chars = ""
+        
+        if use_letters:
+            chars += string.ascii_lowercase
+            if use_uppercase:
+                chars += string.ascii_uppercase
+        
+        if use_cyrillic:
+            chars += "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+            if use_uppercase:
+                chars += "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+        
+        if use_digits:
+            chars += string.digits
+        
+        if use_special:
+            chars += "!@#$%^&*_-+="
+        
+        # Если ничего не выбрано, используем латиницу по умолчанию
+        if not chars:
+            chars = string.ascii_lowercase
+        
+        return ''.join(random.choice(chars) for _ in range(length))
+    
+    def generate_boundary_test_data(self,
+                                    field_name: str,
+                                    min_len: int,
+                                    max_len: int,
+                                    use_letters: bool = True,
+                                    use_digits: bool = False,
+                                    use_special: bool = False,
+                                    use_cyrillic: bool = False,
+                                    use_uppercase: bool = False) -> List[Dict[str, Any]]:
+        """
+        Генерация тестовых данных по технике эквивалентного разбиения (BVA)
+        
+        Args:
+            field_name: Название поля (login, password, nickname и т.д.)
+            min_len: Минимальная допустимая длина
+            max_len: Максимальная допустимая длина
+            use_letters: Использовать латинские буквы
+            use_digits: Использовать цифры
+            use_special: Использовать специальные символы
+            use_cyrillic: Использовать кириллицу
+            use_uppercase: Использовать заглавные буквы
+        
+        Returns:
+            Список тестовых данных с граничными значениями
+        """
+        boundaries = self.get_boundary_lengths(min_len, max_len)
+        test_data = []
+        
+        for boundary in boundaries:
+            value = self.generate_string_exact_length(
+                length=boundary["length"],
+                use_letters=use_letters,
+                use_digits=use_digits,
+                use_special=use_special,
+                use_cyrillic=use_cyrillic,
+                use_uppercase=use_uppercase
+            )
+            
+            test_data.append({
+                "field": field_name,
+                "value": value,
+                "length": boundary["length"],
+                "boundary_type": boundary["boundary_type"],
+                "description": boundary["description"],
+                "expected_valid": boundary["expected_valid"],
+                "test_case": f"{'POSITIVE' if boundary['expected_valid'] else 'NEGATIVE'}: {field_name} - {boundary['description']}"
+            })
+        
+        return test_data
+    
+    def generate_numeric_boundary_test_data(self,
+                                            field_name: str,
+                                            min_val: int,
+                                            max_val: int) -> List[Dict[str, Any]]:
+        """
+        Генерация тестовых данных для числовых полей по технике BVA
+        
+        Args:
+            field_name: Название поля
+            min_val: Минимальное допустимое значение
+            max_val: Максимальное допустимое значение
+        
+        Returns:
+            Список тестовых данных с граничными значениями
+        """
+        test_data = []
+        
+        boundaries = [
+            (min_val - 1, "below_min", f"Ниже минимума ({min_val - 1})", False),
+            (min_val, "min", f"Минимум ({min_val})", True),
+            (min_val + 1, "above_min", f"Выше минимума ({min_val + 1})", True),
+            (max_val - 1, "below_max", f"Ниже максимума ({max_val - 1})", True),
+            (max_val, "max", f"Максимум ({max_val})", True),
+            (max_val + 1, "above_max", f"Выше максимума ({max_val + 1})", False),
+        ]
+        
+        for value, boundary_type, description, expected_valid in boundaries:
+            test_data.append({
+                "field": field_name,
+                "value": value,
+                "boundary_type": boundary_type,
+                "description": description,
+                "expected_valid": expected_valid,
+                "test_case": f"{'POSITIVE' if expected_valid else 'NEGATIVE'}: {field_name} - {description}"
+            })
+        
+        return test_data
     
     # ==================== МАССОВАЯ ГЕНЕРАЦИЯ ====================
     
@@ -787,6 +993,170 @@ class InteractiveConsole:
         self.last_generated_data = custom_data
         self.offer_export(custom_data, "custom_data")
     
+    def generate_boundary_data_interactive(self):
+        """Интерактивная генерация данных по технике эквивалентного разбиения (BVA)"""
+        self.print_header("ЭКВИВАЛЕНТНОЕ РАЗБИЕНИЕ (BOUNDARY VALUE ANALYSIS)")
+        
+        print("\n📋 Техника граничных значений генерирует тестовые данные")
+        print("   для проверки границ допустимых значений.")
+        print("\n   Для диапазона 3-16 символов будут созданы значения:")
+        print("   • 2 символа  (ниже минимума - NEGATIVE)")
+        print("   • 3 символа  (минимум - POSITIVE)")
+        print("   • 4 символа  (выше минимума - POSITIVE)")
+        print("   • 15 символов (ниже максимума - POSITIVE)")
+        print("   • 16 символов (максимум - POSITIVE)")
+        print("   • 17 символов (выше максимума - NEGATIVE)")
+        
+        print("\n" + "-" * 70)
+        print("Выберите тип данных:")
+        print("  1. Строковые данные (логин, пароль, никнейм и т.д.)")
+        print("  2. Числовые данные (возраст, количество, уровень и т.д.)")
+        
+        data_type = self.get_input("\nВаш выбор", "1")
+        
+        if data_type == "2":
+            self._generate_numeric_boundary_interactive()
+        else:
+            self._generate_string_boundary_interactive()
+    
+    def _generate_string_boundary_interactive(self):
+        """Генерация граничных строковых данных"""
+        print("\n" + "=" * 70)
+        print("  НАСТРОЙКА СТРОКОВЫХ ГРАНИЧНЫХ ДАННЫХ")
+        print("=" * 70)
+        
+        # Название поля
+        print("\nПресеты полей:")
+        print("  1. login (логин)")
+        print("  2. password (пароль)")
+        print("  3. nickname (никнейм)")
+        print("  4. username (имя пользователя)")
+        print("  5. Другое (ввести вручную)")
+        
+        preset = self.get_input("Выберите поле", "1")
+        
+        presets = {
+            "1": ("login", 3, 16),
+            "2": ("password", 8, 32),
+            "3": ("nickname", 3, 20),
+            "4": ("username", 4, 24),
+        }
+        
+        if preset in presets:
+            field_name, default_min, default_max = presets[preset]
+        else:
+            field_name = self.get_input("Введите название поля", "field")
+            default_min, default_max = 1, 10
+        
+        # Границы
+        min_len = self.get_input(f"Минимальная длина для {field_name}", default_min, int)
+        max_len = self.get_input(f"Максимальная длина для {field_name}", default_max, int)
+        
+        if min_len < 0:
+            print("❌ Минимальная длина не может быть отрицательной")
+            return
+        
+        if max_len < min_len:
+            print("❌ Максимальная длина не может быть меньше минимальной")
+            return
+        
+        # Параметры генерации
+        print("\n⚙️ Параметры генерации строк:")
+        use_letters = self.get_yes_no("Использовать латинские буквы", True)
+        use_cyrillic = self.get_yes_no("Использовать кириллицу", False)
+        use_uppercase = self.get_yes_no("Использовать заглавные буквы", False)
+        use_digits = self.get_yes_no("Использовать цифры", True)
+        use_special = self.get_yes_no("Использовать спецсимволы (!@#$%^&*)", False)
+        
+        # Генерация
+        print(f"\n⏳ Генерация граничных значений для '{field_name}' ({min_len}-{max_len} символов)...")
+        
+        test_data = self.generator.generate_boundary_test_data(
+            field_name=field_name,
+            min_len=min_len,
+            max_len=max_len,
+            use_letters=use_letters,
+            use_digits=use_digits,
+            use_special=use_special,
+            use_cyrillic=use_cyrillic,
+            use_uppercase=use_uppercase
+        )
+        
+        # Вывод результатов
+        print(f"\n✅ Сгенерировано {len(test_data)} тестовых значений:\n")
+        print("-" * 70)
+        
+        for i, item in enumerate(test_data, 1):
+            status = "✅ POSITIVE" if item["expected_valid"] else "❌ NEGATIVE"
+            print(f"\n{i}. {status}")
+            print(f"   📋 Тест-кейс: {item['test_case']}")
+            print(f"   📏 Длина: {item['length']} символов")
+            print(f"   📝 Значение: {item['value']}")
+            print(f"   🎯 Тип границы: {item['boundary_type']}")
+        
+        self.last_generated_data = test_data
+        self.offer_export(test_data, f"bva_{field_name}")
+    
+    def _generate_numeric_boundary_interactive(self):
+        """Генерация граничных числовых данных"""
+        print("\n" + "=" * 70)
+        print("  НАСТРОЙКА ЧИСЛОВЫХ ГРАНИЧНЫХ ДАННЫХ")
+        print("=" * 70)
+        
+        # Название поля
+        print("\nПресеты полей:")
+        print("  1. age (возраст)")
+        print("  2. level (уровень)")
+        print("  3. quantity (количество)")
+        print("  4. score (очки)")
+        print("  5. Другое (ввести вручную)")
+        
+        preset = self.get_input("Выберите поле", "1")
+        
+        presets = {
+            "1": ("age", 18, 100),
+            "2": ("level", 1, 100),
+            "3": ("quantity", 1, 999),
+            "4": ("score", 0, 10000),
+        }
+        
+        if preset in presets:
+            field_name, default_min, default_max = presets[preset]
+        else:
+            field_name = self.get_input("Введите название поля", "field")
+            default_min, default_max = 0, 100
+        
+        # Границы
+        min_val = self.get_input(f"Минимальное значение для {field_name}", default_min, int)
+        max_val = self.get_input(f"Максимальное значение для {field_name}", default_max, int)
+        
+        if max_val < min_val:
+            print("❌ Максимальное значение не может быть меньше минимального")
+            return
+        
+        # Генерация
+        print(f"\n⏳ Генерация граничных значений для '{field_name}' ({min_val}-{max_val})...")
+        
+        test_data = self.generator.generate_numeric_boundary_test_data(
+            field_name=field_name,
+            min_val=min_val,
+            max_val=max_val
+        )
+        
+        # Вывод результатов
+        print(f"\n✅ Сгенерировано {len(test_data)} тестовых значений:\n")
+        print("-" * 70)
+        
+        for i, item in enumerate(test_data, 1):
+            status = "✅ POSITIVE" if item["expected_valid"] else "❌ NEGATIVE"
+            print(f"\n{i}. {status}")
+            print(f"   📋 Тест-кейс: {item['test_case']}")
+            print(f"   🔢 Значение: {item['value']}")
+            print(f"   🎯 Тип границы: {item['boundary_type']}")
+        
+        self.last_generated_data = test_data
+        self.offer_export(test_data, f"bva_{field_name}")
+    
     def offer_export(self, data: Any, default_name: str):
         """Предложение экспорта данных"""
         print("\n" + "-" * 70)
@@ -841,7 +1211,8 @@ class InteractiveConsole:
                 ("6", "💰 Генерация цен"),
                 ("7", "📅 Генерация дат"),
                 ("8", "🔧 Генерация произвольных данных"),
-                ("9", "💾 Экспорт последних данных"),
+                ("9", "🎯 Эквивалентное разбиение (BVA)"),
+                ("10", "💾 Экспорт последних данных"),
                 ("0", "🚪 Выход")
             ]
             
@@ -876,6 +1247,9 @@ class InteractiveConsole:
                 self.generate_custom_data()
                 input("\nНажмите Enter для продолжения...")
             elif choice == "9":
+                self.generate_boundary_data_interactive()
+                input("\nНажмите Enter для продолжения...")
+            elif choice == "10":
                 self.export_data_interactive()
             elif choice == "0":
                 print("\n👋 До свидания!")
