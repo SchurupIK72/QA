@@ -7,7 +7,8 @@
 
 ### ID*
 Уникальный идентификатор бага.
-**Формат:** `BUG-[Section]-[Number]`
+**Формат:** `BUG-[Section]-[№]`
+**Формула Excel:** `="BUG-" & B43 & "-" & A43` (где A = №, B = Section)
 **Примеры:** 
 - `BUG-MainPage-1`
 - `BUG-Career-2`
