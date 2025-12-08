@@ -1,0 +1,134 @@
+{
+  "testId": "BATTLE-REWARDS-03",
+  "testName": "Уничтожение мин",
+  "description": "Проверка начисления наград за уничтожение мин (100 серебра, 70 XP командира, 20 XP экипажа за мину)",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения - Таблица 2.11.3",
+
+  "request": {
+    "status": 0,
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 2
+        },
+        "userBaseHealth": {
+          "health": 10000,
+          "damaged": 0,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0001-000000000000",
+            "comment": "Исследователь (Research)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0002-000000000000",
+            "comment": "Грузовой (Cargo)"
+          }
+        ],
+        "mineFrags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000001",
+            "comment": "Мина 1"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000002",
+            "comment": "Мина 2"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000003",
+            "comment": "Мина 3"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000004",
+            "comment": "Мина 4"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000005",
+            "comment": "Мина 5"
+          }
+        ],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [0],
+        "timesOfDay": [0]
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "research": { "count": 1, "perUnit": 50, "total": 50, "comment": "Исследователь" },
+        "cargo": { "count": 1, "perUnit": 100, "total": 100, "comment": "Грузовой" }
+      },
+      "mineKills": {
+        "count": 5,
+        "perUnit": 100,
+        "total": 500,
+        "comment": "100 серебра за каждую мину"
+      },
+      "waveCompletion": 300,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 150,
+      "TOTAL": 1000
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "research": { "count": 1, "perUnit": 25, "total": 25 },
+        "cargo": { "count": 1, "perUnit": 25, "total": 25 }
+      },
+      "mineKills": {
+        "count": 5,
+        "perUnit": 70,
+        "total": 350,
+        "comment": "70 XP командира за каждую мину"
+      },
+      "waveCompletion": 150,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 50,
+      "TOTAL": 600
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "research": { "count": 1, "perUnit": 10, "total": 10 },
+        "cargo": { "count": 1, "perUnit": 10, "total": 10 }
+      },
+      "mineKills": {
+        "count": 5,
+        "perUnit": 20,
+        "total": 100,
+        "comment": "20 XP экипажа за каждую мину"
+      },
+      "waveCompletion": 70,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 20,
+      "TOTAL": 200
+    }
+  },
+
+  "mineRewardReference": {
+    "silver": 100,
+    "commanderExp": 70,
+    "crewExp": 20,
+    "comment": "Награда за уничтожение одной мины"
+  }
+}

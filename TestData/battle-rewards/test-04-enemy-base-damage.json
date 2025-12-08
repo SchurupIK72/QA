@@ -1,0 +1,135 @@
+{
+  "testId": "BATTLE-REWARDS-04",
+  "testName": "Урон по вражеской базе",
+  "description": "Проверка начисления наград за урон по базе противника (30 серебра, 10 XP за каждые 100 ед. урона)",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения - Таблица 2.11.3",
+
+  "request": {
+    "status": 0,
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 3
+        },
+        "userBaseHealth": {
+          "health": 9800,
+          "damaged": 200,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "damage": 500,
+            "comment": "Попадание 1 - 500 урона"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "damage": 800,
+            "comment": "Попадание 2 - 800 урона"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "damage": 1200,
+            "comment": "Попадание 3 - 1200 урона"
+          }
+        ],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000004",
+            "comment": "Линкор (Warship R4)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000004",
+            "comment": "Торпедный (Speedboat R4)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0001-000000000000",
+            "comment": "Исследователь (Research)"
+          }
+        ],
+        "mineFrags": [],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [0],
+        "timesOfDay": [0]
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "warshipR4_Linkor": { "count": 1, "perUnit": 200, "total": 200, "comment": "Боевой корабль R4" },
+        "speedboatR4_Torpedny": { "count": 1, "perUnit": 120, "total": 120, "comment": "Боевой катер R4" },
+        "research": { "count": 1, "perUnit": 50, "total": 50, "comment": "Исследователь" }
+      },
+      "enemyBaseDamage": {
+        "totalDamage": 2500,
+        "per100damage": 30,
+        "total": 750,
+        "calculation": "2500 / 100 * 30 = 750 серебра",
+        "comment": "30 серебра за каждые 100 ед. урона"
+      },
+      "waveCompletion": 300,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 370,
+      "TOTAL": 1470
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "warshipR4_Linkor": { "count": 1, "perUnit": 30, "total": 30 },
+        "speedboatR4_Torpedny": { "count": 1, "perUnit": 30, "total": 30 },
+        "research": { "count": 1, "perUnit": 25, "total": 25 }
+      },
+      "enemyBaseDamage": {
+        "totalDamage": 2500,
+        "per100damage": 10,
+        "total": 250,
+        "calculation": "2500 / 100 * 10 = 250 XP командира"
+      },
+      "waveCompletion": 150,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 85,
+      "TOTAL": 535
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "warshipR4_Linkor": { "count": 1, "perUnit": 12, "total": 12 },
+        "speedboatR4_Torpedny": { "count": 1, "perUnit": 12, "total": 12 },
+        "research": { "count": 1, "perUnit": 10, "total": 10 }
+      },
+      "enemyBaseDamage": {
+        "totalDamage": 2500,
+        "per100damage": 10,
+        "total": 250,
+        "calculation": "2500 / 100 * 10 = 250 XP экипажа"
+      },
+      "waveCompletion": 70,
+      "weatherBonus": { "clear": 0 },
+      "timeOfDayBonus": { "day": 0 },
+      "totalShipKills": 34,
+      "TOTAL": 364
+    }
+  },
+
+  "enemyBaseDamageReference": {
+    "per100damage": {
+      "silver": 30,
+      "commanderExp": 10,
+      "crewExp": 10
+    },
+    "comment": "Награда начисляется за каждые 100 единиц урона по вражеской базе"
+  }
+}

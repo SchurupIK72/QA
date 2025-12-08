@@ -1,0 +1,116 @@
+{
+  "testId": "BATTLE-REWARDS-07",
+  "testName": "Поражение - без завершения волны",
+  "description": "Проверка начисления наград при проигрыше (status=1) - награда за волну не начисляется",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения - Таблица 2.11.3",
+
+  "request": {
+    "status": 1,
+    "statusComment": "Поражение: база игрока уничтожена или все корабли волны не уничтожены",
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 5
+        },
+        "userBaseHealth": {
+          "health": 0,
+          "damaged": 10000,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000001",
+            "comment": "Броненосец (Warship R1)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000001",
+            "comment": "Охотник (Speedboat R1)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0002-000000000000",
+            "comment": "Грузовой (Cargo)"
+          }
+        ],
+        "mineFrags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "mineId": "30000000-0000-0000-0001-000000000001",
+            "comment": "Мина 1"
+          }
+        ],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [2],
+        "timesOfDay": [1],
+        "comment": "Не все корабли уничтожены (3 из 5)"
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "comment": "При поражении награда за завершение волны НЕ начисляется, но награды за уничтоженные корабли и мины сохраняются",
+
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 350, "total": 350 },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 200, "total": 200 },
+        "cargo": { "count": 1, "perUnit": 100, "total": 100 }
+      },
+      "mineKills": { "count": 1, "perUnit": 100, "total": 100 },
+      "waveCompletion": 0,
+      "waveCompletionComment": "Волна не завершена - бонус не начисляется",
+      "weatherBonus": {
+        "fog": 75,
+        "comment": "Бонусы за погоду начисляются даже при поражении"
+      },
+      "timeOfDayBonus": {
+        "night": 50,
+        "comment": "Бонусы за время суток начисляются даже при поражении"
+      },
+      "totalShipKills": 650,
+      "TOTAL": 925
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 45, "total": 45 },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 45, "total": 45 },
+        "cargo": { "count": 1, "perUnit": 25, "total": 25 }
+      },
+      "mineKills": { "count": 1, "perUnit": 70, "total": 70 },
+      "waveCompletion": 0,
+      "weatherBonus": { "fog": 25 },
+      "timeOfDayBonus": { "night": 20 },
+      "totalShipKills": 115,
+      "TOTAL": 280
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 15, "total": 15 },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 15, "total": 15 },
+        "cargo": { "count": 1, "perUnit": 10, "total": 10 }
+      },
+      "mineKills": { "count": 1, "perUnit": 20, "total": 20 },
+      "waveCompletion": 0,
+      "weatherBonus": { "fog": 10 },
+      "timeOfDayBonus": { "night": 15 },
+      "totalShipKills": 40,
+      "TOTAL": 95
+    }
+  },
+
+  "statusReference": {
+    "0": "Победа - все волны завершены, база игрока уцелела",
+    "1": "Поражение - база игрока уничтожена или волна не завершена"
+  }
+}

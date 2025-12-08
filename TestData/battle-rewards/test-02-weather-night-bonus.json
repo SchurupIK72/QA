@@ -1,0 +1,127 @@
+{
+  "testId": "BATTLE-REWARDS-02",
+  "testName": "Погодные условия и время суток - Ночной туман",
+  "description": "Проверка бонусов за сложные погодные условия (Туман) и время суток (Ночь)",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения - Таблица 2.11.3",
+
+  "request": {
+    "status": 0,
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 3
+        },
+        "userBaseHealth": {
+          "health": 9500,
+          "damaged": 500,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000002",
+            "comment": "Эсминец (Speedboat R2)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000002",
+            "comment": "Крейсер (Warship R2)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000003",
+            "comment": "Сторожевик (Speedboat R3)"
+          }
+        ],
+        "mineFrags": [],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [2],
+        "timesOfDay": [1]
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "speedboatR2_Esminec": { "count": 1, "perUnit": 180, "total": 180, "comment": "Боевой катер R2" },
+        "warshipR2_Kreiser": { "count": 1, "perUnit": 280, "total": 280, "comment": "Боевой корабль R2" },
+        "speedboatR3_Storozevik": { "count": 1, "perUnit": 150, "total": 150, "comment": "Боевой катер R3" }
+      },
+      "waveCompletion": 300,
+      "weatherBonus": {
+        "fog": 75,
+        "comment": "Туман (weatherConditions=2)"
+      },
+      "timeOfDayBonus": {
+        "night": 50,
+        "comment": "Ночь (timesOfDay=1)"
+      },
+      "totalShipKills": 610,
+      "TOTAL": 1085
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "speedboatR2_Esminec": { "count": 1, "perUnit": 35, "total": 35 },
+        "warshipR2_Kreiser": { "count": 1, "perUnit": 35, "total": 35 },
+        "speedboatR3_Storozevik": { "count": 1, "perUnit": 33, "total": 33 }
+      },
+      "waveCompletion": 150,
+      "weatherBonus": {
+        "fog": 25,
+        "comment": "Туман"
+      },
+      "timeOfDayBonus": {
+        "night": 20,
+        "comment": "Ночь"
+      },
+      "totalShipKills": 103,
+      "TOTAL": 348
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "speedboatR2_Esminec": { "count": 1, "perUnit": 20, "total": 20 },
+        "warshipR2_Kreiser": { "count": 1, "perUnit": 20, "total": 20 },
+        "speedboatR3_Storozevik": { "count": 1, "perUnit": 15, "total": 15 }
+      },
+      "waveCompletion": 70,
+      "weatherBonus": {
+        "fog": 10,
+        "comment": "Туман"
+      },
+      "timeOfDayBonus": {
+        "night": 15,
+        "comment": "Ночь"
+      },
+      "totalShipKills": 55,
+      "TOTAL": 160
+    }
+  },
+
+  "weatherReference": {
+    "0": { "name": "Ясно (Clear)", "silverBonus": 0, "commanderExpBonus": 0, "crewExpBonus": 0 },
+    "1": { "name": "Пасмурно (Cloudy)", "silverBonus": 50, "commanderExpBonus": 10, "crewExpBonus": 5 },
+    "2": { "name": "Туман (Fog)", "silverBonus": 75, "commanderExpBonus": 25, "crewExpBonus": 10 },
+    "3": { "name": "Дождь (Rain)", "silverBonus": 100, "commanderExpBonus": 30, "crewExpBonus": 15 }
+  },
+
+  "timeOfDayReference": {
+    "0": { "name": "День (Day)", "silverBonus": 0, "commanderExpBonus": 0, "crewExpBonus": 0 },
+    "1": { "name": "Ночь (Night)", "silverBonus": 50, "commanderExpBonus": 20, "crewExpBonus": 15 }
+  },
+
+  "shipReference": {
+    "20000000-0000-0000-0003-000000000002": "Эсминец (Speedboat, Rank=2)",
+    "20000000-0000-0000-0004-000000000002": "Крейсер (Warship, Rank=2)",
+    "20000000-0000-0000-0003-000000000003": "Сторожевик (Speedboat, Rank=3)"
+  }
+}

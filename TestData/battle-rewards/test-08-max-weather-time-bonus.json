@@ -1,0 +1,130 @@
+{
+  "testId": "BATTLE-REWARDS-08",
+  "testName": "Граничные значения - дождь ночью максимальный бонус",
+  "description": "Проверка максимальных бонусов за погоду (Дождь) и время (Ночь) одновременно",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения - Таблица 2.11.3",
+
+  "request": {
+    "status": 0,
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 2
+        },
+        "userBaseHealth": {
+          "health": 9000,
+          "damaged": 1000,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000001",
+            "comment": "Броненосец (Warship R1) - максимальная награда"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000001",
+            "comment": "Охотник (Speedboat R1) - максимальная награда"
+          }
+        ],
+        "mineFrags": [],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [3],
+        "timesOfDay": [1]
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "comment": "Максимальные бонусы: Дождь (100/30/15) + Ночь (50/20/15)",
+
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 350, "total": 350, "comment": "Максимальная награда за корабль" },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 200, "total": 200, "comment": "Максимальная награда за катер" }
+      },
+      "waveCompletion": 300,
+      "weatherBonus": {
+        "rain": 100,
+        "comment": "Дождь - максимальный погодный бонус"
+      },
+      "timeOfDayBonus": {
+        "night": 50,
+        "comment": "Ночь"
+      },
+      "totalShipKills": 550,
+      "combinedBonus": 150,
+      "TOTAL": 1050
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 45, "total": 45 },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 45, "total": 45 }
+      },
+      "waveCompletion": 150,
+      "weatherBonus": {
+        "rain": 30,
+        "comment": "Дождь - максимальный погодный бонус"
+      },
+      "timeOfDayBonus": {
+        "night": 20,
+        "comment": "Ночь"
+      },
+      "totalShipKills": 90,
+      "combinedBonus": 50,
+      "TOTAL": 340
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "warshipR1_Bronenosec": { "count": 1, "perUnit": 15, "total": 15 },
+        "speedboatR1_Ohotnik": { "count": 1, "perUnit": 15, "total": 15 }
+      },
+      "waveCompletion": 70,
+      "weatherBonus": {
+        "rain": 15,
+        "comment": "Дождь - максимальный погодный бонус"
+      },
+      "timeOfDayBonus": {
+        "night": 15,
+        "comment": "Ночь"
+      },
+      "totalShipKills": 30,
+      "combinedBonus": 30,
+      "TOTAL": 140
+    }
+  },
+
+  "maxBonusReference": {
+    "description": "Максимальные комбинированные бонусы за условия боя",
+    "weather": {
+      "rain": {
+        "silver": 100,
+        "commanderExp": 30,
+        "crewExp": 15
+      }
+    },
+    "timeOfDay": {
+      "night": {
+        "silver": 50,
+        "commanderExp": 20,
+        "crewExp": 15
+      }
+    },
+    "combined": {
+      "silver": 150,
+      "commanderExp": 50,
+      "crewExp": 30,
+      "comment": "Суммарный максимальный бонус за условия"
+    }
+  }
+}

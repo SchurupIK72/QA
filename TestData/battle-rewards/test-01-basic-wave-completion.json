@@ -1,0 +1,122 @@
+{
+  "testId": "BATTLE-REWARDS-01",
+  "testName": "Базовое прохождение волны с уничтожением кораблей",
+  "description": "Проверка начисления базовых наград за уничтожение кораблей разных типов и прохождение волны",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения",
+
+  "request": {
+    "status": 0,
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 6
+        },
+        "userBaseHealth": {
+          "health": 10000,
+          "damaged": 0,
+          "healed": 0
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0001-000000000000",
+            "comment": "Исследовательское судно (Нейтральный)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0002-000000000000",
+            "comment": "Грузовой корабль (Нейтральный)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000004",
+            "comment": "Большой боевой катер (Speedboat R4)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000004",
+            "comment": "Корвет (Warship R4)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000001",
+            "comment": "Линкор (Warship R1)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000001",
+            "comment": "БПК (Speedboat R1)"
+          }
+        ],
+        "mineFrags": [],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [0],
+        "timesOfDay": [0]
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "researchShip": { "count": 1, "perUnit": 50, "total": 50, "comment": "Исследовательский корабль" },
+        "cargoShip": { "count": 1, "perUnit": 100, "total": 100, "comment": "Грузовой корабль" },
+        "speedboatR4": { "count": 1, "perUnit": 120, "total": 120, "comment": "Боевой катер R4" },
+        "warshipR4": { "count": 1, "perUnit": 200, "total": 200, "comment": "Боевой корабль R4" },
+        "warshipR1": { "count": 1, "perUnit": 350, "total": 350, "comment": "Боевой корабль R1 (Линкор)" },
+        "speedboatR1": { "count": 1, "perUnit": 200, "total": 200, "comment": "Боевой катер R1 (БПК)" }
+      },
+      "waveCompletion": 300,
+      "weatherBonus": 0,
+      "timeOfDayBonus": 0,
+      "totalShipKills": 1020,
+      "TOTAL": 1370
+    },
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "researchShip": { "count": 1, "perUnit": 25, "total": 25 },
+        "cargoShip": { "count": 1, "perUnit": 25, "total": 25 },
+        "speedboatR4": { "count": 1, "perUnit": 30, "total": 30 },
+        "warshipR4": { "count": 1, "perUnit": 30, "total": 30 },
+        "warshipR1": { "count": 1, "perUnit": 45, "total": 45 },
+        "speedboatR1": { "count": 1, "perUnit": 45, "total": 45 }
+      },
+      "waveCompletion": 150,
+      "weatherBonus": 0,
+      "timeOfDayBonus": 0,
+      "totalShipKills": 200,
+      "TOTAL": 400
+    },
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "researchShip": { "count": 1, "perUnit": 10, "total": 10 },
+        "cargoShip": { "count": 1, "perUnit": 10, "total": 10 },
+        "speedboatR4": { "count": 1, "perUnit": 12, "total": 12 },
+        "warshipR4": { "count": 1, "perUnit": 12, "total": 12 },
+        "warshipR1": { "count": 1, "perUnit": 15, "total": 15 },
+        "speedboatR1": { "count": 1, "perUnit": 15, "total": 15 }
+      },
+      "waveCompletion": 70,
+      "totalShipKills": 74,
+      "TOTAL": 154
+    }
+  },
+
+  "shipReference": {
+    "20000000-0000-0000-0001-000000000000": "Исследовательское судно (Research, Rank=0)",
+    "20000000-0000-0000-0002-000000000000": "Грузовой корабль (Cargo, Rank=0)",
+    "20000000-0000-0000-0003-000000000004": "Большой боевой катер (Speedboat, Rank=4)",
+    "20000000-0000-0000-0004-000000000004": "Корвет (Warship, Rank=4)",
+    "20000000-0000-0000-0004-000000000001": "Линкор (Warship, Rank=1)",
+    "20000000-0000-0000-0003-000000000001": "БПК (Speedboat, Rank=1)"
+  }
+}
