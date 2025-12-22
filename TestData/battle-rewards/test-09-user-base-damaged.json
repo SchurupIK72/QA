@@ -1,0 +1,123 @@
+{
+  "testId": "BATTLE-REWARDS-09",
+  "testName": "Победа с повреждением базы игрока",
+  "description": "Проверка начисления наград при победе, когда база игрока получила урон от вражеских кораблей",
+  "endpoint": "POST /api/v1/battle/submit-statistics",
+  "section": "2.11.3 Результаты сражения",
+
+  "request": {
+    "status": 0,
+    "statusComment": "Победа: все корабли волны уничтожены, но база получила урон",
+    "waves": [
+      {
+        "wave": {
+          "waveNumber": 1,
+          "totalShips": 4
+        },
+        "userBaseHealth": {
+          "health": 6500,
+          "damaged": 3500,
+          "healed": 0,
+          "comment": "База получила 3500 урона (35% от максимального здоровья 10000)"
+        },
+        "projectilesFired": [],
+        "shipHits": [],
+        "enemyBaseHits": [],
+        "frags": [
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000001",
+            "comment": "Линкор (Warship R1) - нанёс урон базе"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0004-000000000002",
+            "comment": "Крейсер (Warship R2) - нанёс урон базе"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0003-000000000002",
+            "comment": "Торпедный катер (Speedboat R2)"
+          },
+          {
+            "gunId": "10000000-0000-0000-0001-000000000001",
+            "shipConfigId": "20000000-0000-0000-0002-000000000000",
+            "comment": "Грузовой корабль (Cargo)"
+          }
+        ],
+        "mineFrags": [],
+        "radarUsed": [],
+        "radarFounded": [],
+        "weatherConditions": [0],
+        "timesOfDay": [0],
+        "comment": "Все 4 корабля уничтожены, волна пройдена"
+      }
+    ]
+  },
+
+  "expectedResults": {
+    "comment": "При победе с повреждённой базой награды начисляются в полном объёме (урон базы не влияет на награды)",
+
+    "silver": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Linkor": { "count": 1, "perUnit": 350, "total": 350, "comment": "Линкор (Warship R1)" },
+        "warshipR2_Kreyser": { "count": 1, "perUnit": 300, "total": 300, "comment": "Крейсер (Warship R2)" },
+        "speedboatR2": { "count": 1, "perUnit": 160, "total": 160, "comment": "Торпедный катер (Speedboat R2)" },
+        "cargo": { "count": 1, "perUnit": 100, "total": 100, "comment": "Грузовой корабль" }
+      },
+      "mineKills": { "count": 0, "total": 0 },
+      "waveCompletion": 300,
+      "waveCompletionComment": "Волна завершена - бонус начислен",
+      "weatherBonus": 0,
+      "timeOfDayBonus": 0,
+      "totalShipKills": 910,
+      "TOTAL": 1260
+    },
+
+    "commanderExp": {
+      "base": 50,
+      "shipKills": {
+        "warshipR1_Linkor": { "count": 1, "perUnit": 45, "total": 45 },
+        "warshipR2_Kreyser": { "count": 1, "perUnit": 40, "total": 40 },
+        "speedboatR2": { "count": 1, "perUnit": 35, "total": 35 },
+        "cargo": { "count": 1, "perUnit": 25, "total": 25 }
+      },
+      "mineKills": { "count": 0, "total": 0 },
+      "waveCompletion": 150,
+      "weatherBonus": 0,
+      "timeOfDayBonus": 0,
+      "totalShipKills": 145,
+      "TOTAL": 345
+    },
+
+    "crewExp": {
+      "base": 10,
+      "shipKills": {
+        "warshipR1_Linkor": { "count": 1, "perUnit": 15, "total": 15 },
+        "warshipR2_Kreyser": { "count": 1, "perUnit": 14, "total": 14 },
+        "speedboatR2": { "count": 1, "perUnit": 13, "total": 13 },
+        "cargo": { "count": 1, "perUnit": 10, "total": 10 }
+      },
+      "waveCompletion": 70,
+      "totalShipKills": 52,
+      "TOTAL": 132
+    }
+  },
+
+  "baseDamageDetails": {
+    "initialHealth": 10000,
+    "currentHealth": 6500,
+    "totalDamaged": 3500,
+    "damagePercent": 35,
+    "damageSource": "Вражеские корабли дошли до базы и нанесли урон",
+    "comment": "Урон базе не влияет на начисление наград при победе, но может влиять на другие механики игры"
+  },
+
+  "shipReference": {
+    "20000000-0000-0000-0004-000000000001": "Линкор (Warship, Rank=1)",
+    "20000000-0000-0000-0004-000000000002": "Крейсер (Warship, Rank=2)",
+    "20000000-0000-0000-0003-000000000002": "Торпедный катер (Speedboat, Rank=2)",
+    "20000000-0000-0000-0002-000000000000": "Грузовой корабль (Cargo, Rank=0)"
+  }
+}
