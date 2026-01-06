@@ -120,7 +120,7 @@ mkdir confidential/projects/$projectName/swagger
 ```
 
 2. **Создайте чек-лист API тестирования:**
-   - Используйте пример `projects/Gladiators/checklists/checklist-backend-api-Gladiators.csv`
+   - Используйте шаблон из папки templates
    - Адаптируйте под endpoint'ы вашего API
 
 3. **Категории для проверки:**
@@ -131,7 +131,32 @@ mkdir confidential/projects/$projectName/swagger
    - Производительность
    - Безопасность
 
-## 📝 Быстрые шаблоны
+## � Конвертация и анонимизация DOCX
+
+### Конвертировать ТЗ из DOCX в Markdown
+
+**С анонимизацией конфиденциальных данных:**
+```powershell
+python scripts/docx_to_md.py "ТЗ проекта.docx" "output.md" --anonymize
+```
+
+**Или сокращенно:**
+```powershell
+python scripts/docx_to_md.py "ТЗ проекта.docx" "output.md" -a
+```
+
+**Что анонимизируется:**
+- ✂️ Названия компаний (ООО, LLC, Inc)
+- ✂️ ФИО людей (Иван Иванов → Пользователь А)
+- ✂️ Email адреса, телефоны, Telegram ники
+- ✂️ Годы в датах (2022 → 202_)
+- ✂️ Информация о заказчике
+
+**Результат:** Документ готов для публичного использования
+
+Подробнее: [docs/ANONYMIZATION-GUIDE.md](docs/ANONYMIZATION-GUIDE.md)
+
+## �📝 Быстрые шаблоны
 
 ### Создание баг-репорта (минимум)
 ```csv
@@ -172,10 +197,6 @@ Proofs: Ссылка на скриншот/видео
 ### 🔧 Инструменты
 - [Генератор тестовых данных](scripts/test_data_generator.py)
 
-### 📂 Примеры проектов
-- [SummonEra - Регрессионный чек-лист](projects/SummonEra/checklists/)
-- [Gladiators - Backend API чек-лист](projects/Gladiators/checklists/)
-
 ## 💡 Частые вопросы
 
 **Q: Как назвать файл баг-репорта?**
@@ -200,7 +221,7 @@ A: Запустите `python scripts/test_data_generator.py` и следуйт�
 A: Используйте шаблон `templates/checklist-tz-review-template.csv` - 225 проверок по 30 категориям.
 
 **Q: Как создать чек-лист для Backend API?**
-A: Посмотрите пример в `projects/Gladiators/checklists/checklist-backend-api-Gladiators.csv`
+A: Используйте шаблон `templates/checklist-regression-template.csv` и адаптируйте под ваши API endpoints
 
 ## 🚀 Быстрые команды
 
