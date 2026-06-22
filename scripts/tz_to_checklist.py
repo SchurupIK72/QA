@@ -22,6 +22,14 @@ from typing import List, Tuple, Optional
 from dataclasses import dataclass, field
 
 
+def configure_stdio() -> None:
+    """Настройка UTF-8 вывода для Windows-консоли."""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 @dataclass
 class ChecklistItem:
     """Элемент чек-листа."""
@@ -85,6 +93,7 @@ class TZParser:
     # Исключаемые паттерны (не являются требованиями)
     EXCLUDE_PATTERNS = [
         r'^рис\.',
+        r'^изображение\s+\d',
         r'^таблица',
         r'^\*\*',
         r'^\[\[',
@@ -186,6 +195,12 @@ class TZParser:
     
     def is_list_item_valid(self, text: str) -> bool:
         """Проверить, является ли элемент списка валидным для чек-листа."""
+        normalized_text = self.clean_text(text)
+
+        for pattern in self.EXCLUDE_PATTERNS:
+            if re.search(pattern, text, re.IGNORECASE) or re.search(pattern, normalized_text, re.IGNORECASE):
+                return False
+
         # Минимальная длина
         if len(text) < 5:
             return False
@@ -227,7 +242,9 @@ class TZParser:
     
     def is_functional_requirement(self, text: str) -> bool:
         """Проверить, является ли текст функциональным требованием."""
+        normalized_text = self.clean_text(text)
         text_lower = text.lower()
+        normalized_lower = normalized_text.lower()
         
         # Исключаем описательный текст
         if self.is_descriptive_text(text):
@@ -235,7 +252,7 @@ class TZParser:
         
         # Исключаем по паттернам
         for pattern in self.EXCLUDE_PATTERNS:
-            if re.search(pattern, text, re.IGNORECASE):
+            if re.search(pattern, text, re.IGNORECASE) or re.search(pattern, normalized_text, re.IGNORECASE):
                 return False
         
         # Минимальная длина требования
@@ -248,7 +265,7 @@ class TZParser:
             
         # Проверяем наличие функциональных маркеров
         for marker in self.FUNCTIONAL_MARKERS:
-            if marker in text_lower:
+            if marker in text_lower or marker in normalized_lower:
                 return True
                 
         # Проверяем начало предложения на глагол
@@ -257,7 +274,7 @@ class TZParser:
             'каждый', 'каждая', 'каждое', 'все ', 'любой', 'любая',
         ]
         for start in verb_starts:
-            if text_lower.startswith(start):
+            if text_lower.startswith(start) or normalized_lower.startswith(start):
                 return True
                 
         return False
@@ -590,6 +607,8 @@ class ChecklistGenerator:
 
 def main():
     """Главная функция."""
+    configure_stdio()
+
     parser = argparse.ArgumentParser(
         description='Генерация регрессионного чек-листа из ТЗ'
     )
