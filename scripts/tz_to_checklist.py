@@ -7,10 +7,10 @@
 в формат CSV чек-листа для регрессионного тестирования.
 
 Использование:
-    python tz_to_checklist.py <путь_к_ТЗ.md> [путь_к_выходному_файлу.csv]
+    python scripts/tz_to_checklist.py <путь_к_ТЗ.md> [путь_к_выходному_файлу.csv]
     
 Пример:
-    python tz_to_checklist.py "../confidential/ТЗ.md" "../confidential/ЧекЛист.csv"
+    python scripts/tz_to_checklist.py "../confidential/ТЗ.md" "../confidential/ЧекЛист.csv"
 """
 
 import re
